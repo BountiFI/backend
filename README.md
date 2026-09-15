@@ -1,8 +1,8 @@
-# MergeFi Backend
+# BountiFi Backend
 
 **Where Open Source Meets Finance.**
 
-MergeFi lets sponsors fund open-source work, lets maintainers attach real money
+BountiFi lets sponsors fund open-source work, lets maintainers attach real money
 to GitHub issues, and pays contributors automatically the moment their pull
 request is merged. GitHub stays the source of truth for code and review;
 Stellar/Soroban smart contracts hold the money in escrow and release it
@@ -17,7 +17,7 @@ without anyone having to chase an invoice.
   spend, impact, and contributor performance.
 
 This repository is the backend API. The Soroban smart contracts themselves
-live in the sibling repo `mergefi-contracts`; this service is the
+live in the sibling repo `bountifi-contracts`; this service is the
 orchestration/API layer that talks to those contracts over Stellar/Soroban
 RPC and mirrors on-chain state into Postgres for fast reads.
 
@@ -47,7 +47,7 @@ RPC and mirrors on-chain state into Postgres for fast reads.
                                 │  │ (HMAC-SHA256 verified)
                                 ▼  │
  ┌──────────────────────────────────────────────────────────┐
- │                     MergeFi Backend (NestJS)               │
+ │                     BountiFi Backend (NestJS)               │
  │                                                              │
  │  auth ─── users ─── github (sync + webhooks) ─── bounties   │
  │                                        │              │      │
@@ -64,7 +64,7 @@ RPC and mirrors on-chain state into Postgres for fast reads.
                                   ▼
                    ┌───────────────────────────────┐
                    │  Escrow smart contract(s)      │
-                   │  deployed from mergefi-contracts│
+                   │  deployed from bountifi-contracts│
                    │  (Stellar / Soroban network)    │
                    └───────────────────────────────┘
 ```
@@ -135,7 +135,7 @@ See [`.env.example`](./.env.example) for the full annotated list. Highlights:
 | `GITHUB_WEBHOOK_SECRET` | HMAC-SHA256 secret configured on the GitHub webhook. |
 | `ANALYTICS_PLATFORM_SUMMARY_TTL_MS` | In-process TTL for `GET /analytics/platform` (default `60000`). Also invalidated on bounty create/pay and first repository sync. |
 | `STELLAR_NETWORK`, `SOROBAN_RPC_URL`, `STELLAR_NETWORK_PASSPHRASE` | Stellar network config. |
-| `ESCROW_CONTRACT_ID` | Deployed escrow contract ID from `mergefi-contracts`. **Not set in this environment** — see below. |
+| `ESCROW_CONTRACT_ID` | Deployed escrow contract ID from `bountifi-contracts`. **Not set in this environment** — see below. |
 | `MAINTENANCE_POOL_CONTRACT_ID` | Optional separate contract for maintenance-pool escrows; falls back to `ESCROW_CONTRACT_ID`. |
 | `USDC_TOKEN_CONTRACT_ID`, `XLM_TOKEN_CONTRACT_ID` | Soroban token (SAC) contract addresses, passed as `escrow::fund`'s required `token` argument. |
 | `ESCROW_DEADLINE_SECONDS` | Fallback `escrow::fund` deadline (seconds from fund time) when the bounty/milestone has none. Default 90 days. |
@@ -151,7 +151,7 @@ it calls the client, then persists `Escrow`/`Payment` rows and drives the
 `Bounty`/`Milestone`/`MaintenancePool` state alongside it.
 
 **Current limitation:** there is no live deployed escrow contract available
-in this environment (`mergefi-contracts` is a separate repo/session). When
+in this environment (`bountifi-contracts` is a separate repo/session). When
 `ESCROW_CONTRACT_ID` or `TREASURY_SECRET` are unset, `SorobanClientService`
 transparently short-circuits into a deterministic **dry-run** mode — it logs
 a warning, returns a synthetic tx hash, and skips the network call — so the
@@ -165,7 +165,7 @@ local dev. Once real contracts are deployed:
 2. Set `TREASURY_SECRET` to a funded Stellar account.
 3. Confirm the contract's `fund`/`release`/`refund` function signatures match
    the ones documented at the top of `soroban-client.service.ts` (adjusted in
-   this change to track `mergefi-contracts`' `contracts/escrow/src/lib.rs`).
+   this change to track `bountifi-contracts`' `contracts/escrow/src/lib.rs`).
 
 No private keys for end users are ever stored — only the platform treasury
 signer, and only as an env var for this MVP (see Roadmap: move to KMS/multi-sig).
@@ -239,7 +239,7 @@ docker compose up --build
 - **Node Modules Isolation**: The container uses an anonymous volume for `/usr/src/app/node_modules`. This prevents Windows/Host compiled node packages from contaminating the Linux-native container.
 - **Services**:
   - The API is served at `http://localhost:3000/api` (Swagger docs at `http://localhost:3000/api/docs`).
-  - PostgreSQL is mapped to port `5432` on your localhost with credentials `postgres:postgres` and database name `mergefi`.
+  - PostgreSQL is mapped to port `5432` on your localhost with credentials `postgres:postgres` and database name `bountifi`.
 
 ### 2. Local Development Natively on Host
 
@@ -254,7 +254,7 @@ docker compose up -d db
 
 # C. Configure Environment Variables
 cp .env.example .env
-# Set DATABASE_URL=postgresql://postgres:postgres@localhost:5432/mergefi
+# Set DATABASE_URL=postgresql://postgres:postgres@localhost:5432/bountifi
 
 # D. Start NestJS in development mode
 npm run start:dev
@@ -266,7 +266,7 @@ The Dockerfile is structured as a secure, multi-stage build running on Alpine Li
 
 #### Build the production image:
 ```bash
-docker build --target runner -t mergefi-backend:latest .
+docker build --target runner -t bountifi-backend:latest .
 ```
 
 #### Production Guardrails (Important):
@@ -276,11 +276,11 @@ docker build --target runner -t mergefi-backend:latest .
   ```bash
   docker run -p 3000:3000 \
     -e JWT_SECRET="your-highly-secure-random-jwt-key" \
-    -e DATABASE_URL="postgresql://user:pass@db-host:5432/mergefi" \
+    -e DATABASE_URL="postgresql://user:pass@db-host:5432/bountifi" \
     -e GITHUB_CLIENT_ID=... -e GITHUB_CLIENT_SECRET=... \
     -e GITHUB_WEBHOOK_SECRET=... \
     -e ESCROW_CONTRACT_ID=... -e TREASURY_SECRET=... \
-    mergefi-backend:latest
+    bountifi-backend:latest
   ```
 
 ### 4. Running Tests
@@ -330,7 +330,7 @@ npm run migration:revert
 
 - [x] ~~Wire up TypeORM migrations (currently relies on `synchronize` for local dev only).~~ See `src/database/migrations/` and the Migrations section above.
 - [ ] Move GitHub sync from a static PAT to a GitHub App installation-token flow for multi-org, least-privilege access.
-- [ ] Deploy the real escrow contract from `mergefi-contracts` and drop the Soroban dry-run fallback.
+- [ ] Deploy the real escrow contract from `bountifi-contracts` and drop the Soroban dry-run fallback.
 - [ ] Replace the single `TREASURY_SECRET` signer with a proper signing service (KMS / multi-sig) before handling real funds.
 - [x] ~~Add a scheduled job for `BountiesService.expireOverdue()` (deadline sweeps).~~ See `BountyExpiryScheduler` (hourly `@Cron`).
 - [ ] Add a scheduled job for recurring `MaintenancePool` deposits.

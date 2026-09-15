@@ -17,7 +17,7 @@ export const AppDataSource = new DataSource({
   type: 'postgres',
   url:
     process.env.DATABASE_URL ??
-    'postgresql://postgres:postgres@localhost:5432/mergefi',
+    'postgresql://postgres:postgres@localhost:5432/bountifi',
   entities,
   migrations: [__dirname + '/migrations/*{.ts,.js}'],
   migrationsTableName: 'migrations',

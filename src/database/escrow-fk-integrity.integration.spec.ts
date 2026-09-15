@@ -42,7 +42,7 @@ describe('Escrow FK integrity + sponsor dashboard reconciliation (integration)',
       type: 'postgres',
       url:
         process.env.DATABASE_URL ??
-        'postgresql://postgres:postgres@localhost:5432/mergefi',
+        'postgresql://postgres:postgres@localhost:5432/bountifi',
       entities,
       synchronize: true,
       dropSchema: true,

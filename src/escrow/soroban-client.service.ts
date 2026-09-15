@@ -24,9 +24,9 @@ export interface ContractInvocationResult {
 
 /**
  * Thin wrapper around the Stellar/Soroban RPC client used to invoke the
- * escrow smart contract deployed by the sibling `mergefi-contracts` repo.
+ * escrow smart contract deployed by the sibling `bountifi-contracts` repo.
  *
- * The bounty/milestone escrow signatures below track `mergefi-contracts`'
+ * The bounty/milestone escrow signatures below track `bountifi-contracts`'
  * `contracts/escrow/src/lib.rs`. Adjust argument encoding once the real
  * generated bindings are available. Until ESCROW_CONTRACT_ID is configured,
  * calls run in "simulate-only" dry-run mode and never submit a real
@@ -41,14 +41,14 @@ export interface ContractInvocationResult {
  * degenerate `[(addr, 10_000)]` case of the same `(address, basis_points)`
  * vector a team split uses; there is no separate `split_release` (#161).
  *
- * The `mergefi-maintenance-pool` contract is a distinct deposit/withdraw
+ * The `bountifi-maintenance-pool` contract is a distinct deposit/withdraw
  * model (no lock step, no split): a running on-chain balance topped up by
  * any sponsor via repeated `deposit()`, paid out by an admin against the
  * live balance — see `EscrowService.poolWithdraw` (#163):
  *   fn deposit(env: Env, sponsor: Address, pool_id: BytesN<32>, amount: i128, token: Address)
  *   fn withdraw(env: Env, pool_id: BytesN<32>, recipient: Address, amount: i128) -> i128
  *
- * The `mergefi-milestones` contract is a two-step allocate/release model with
+ * The `bountifi-milestones` contract is a two-step allocate/release model with
  * no "partially drain one locked escrow" primitive (#160, #162):
  * `create_milestone()` opens a budget pool, `allocate(milestone_id, issue_id,
  * amount)` reserves a slice of the unallocated remainder for one issue

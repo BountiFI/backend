@@ -5,7 +5,7 @@ export class AppService {
   getHealth() {
     return {
       status: 'ok',
-      service: 'mergefi-backend',
+      service: 'bountifi-backend',
       timestamp: new Date().toISOString(),
     };
   }

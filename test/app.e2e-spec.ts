@@ -23,7 +23,7 @@ describe('AppController (e2e)', () => {
       .expect((res) => {
         expect(res.body).toMatchObject({
           status: 'ok',
-          service: 'mergefi-backend',
+          service: 'bountifi-backend',
         });
       });
   });

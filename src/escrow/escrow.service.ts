@@ -317,7 +317,7 @@ export class EscrowService {
   /**
    * Pays a reward out of a maintenance pool's running balance.
    *
-   * The real `mergefi-maintenance-pool` contract has no
+   * The real `bountifi-maintenance-pool` contract has no
    * LOCKED-escrow-with-partial-release concept: it accrues an on-chain
    * `balance` through repeated `deposit()` calls and pays out via
    * `withdraw(pool_id, recipient, amount)` against the live balance, with no

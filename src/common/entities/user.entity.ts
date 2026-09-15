@@ -32,7 +32,7 @@ export class User {
   /**
    * Stellar public key the user has linked to receive payouts / fund escrow.
    * Custody of the corresponding secret key always remains with the user
-   * (their wallet, e.g. Freighter) — MergeFi never stores private keys for
+   * (their wallet, e.g. Freighter) — BountiFi never stores private keys for
    * end users, only for the platform treasury signer (see TREASURY_SECRET).
    */
   @Column({ type: 'varchar', nullable: true })

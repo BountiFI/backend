@@ -65,7 +65,7 @@ async function bootstrap() {
   // exposed in production — same spirit as the JWT-secret guard above.
   if (env !== 'production') {
     const swaggerConfig = new DocumentBuilder()
-      .setTitle('MergeFi API')
+      .setTitle('BountiFi API')
       .setDescription(
         'Where Open Source Meets Finance — GitHub bounty escrow orchestration on Stellar/Soroban.',
       )
@@ -81,8 +81,8 @@ async function bootstrap() {
 
   console.log(
     env === 'production'
-      ? `MergeFi backend listening on port ${port}`
-      : `MergeFi backend listening on port ${port} — docs at /api/docs`,
+      ? `BountiFi backend listening on port ${port}`
+      : `BountiFi backend listening on port ${port} — docs at /api/docs`,
   );
 }
 void bootstrap();

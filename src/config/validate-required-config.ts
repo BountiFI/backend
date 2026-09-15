@@ -13,7 +13,7 @@ export const INSECURE_DEFAULT_JWT_SECRET = 'insecure-dev-secret';
  * to connect to whatever is listening on localhost:5432.
  */
 export const DEFAULT_LOCAL_DATABASE_URL =
-  'postgresql://postgres:postgres@localhost:5432/mergefi';
+  'postgresql://postgres:postgres@localhost:5432/bountifi';
 
 export interface ConfigIssue {
   /** The environment variable the operator needs to set. */

@@ -17,7 +17,7 @@ services:
       - .env
     environment:
       # Override DATABASE_URL to target the postgres container inside the docker network
-      - DATABASE_URL=postgresql://postgres:postgres@db:5432/mergefi
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/bountifi
       - PORT=3000
       - NODE_ENV=development
     depends_on:
@@ -30,13 +30,13 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=mergefi
+      - POSTGRES_DB=bountifi
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d mergefi"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d bountifi"]
       interval: 5s
       timeout: 5s
       retries: 5

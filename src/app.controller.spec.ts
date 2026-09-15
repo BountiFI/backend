@@ -18,7 +18,7 @@ describe('AppController', () => {
     it('returns an ok status payload', () => {
       expect(appController.getHealth()).toMatchObject({
         status: 'ok',
-        service: 'mergefi-backend',
+        service: 'bountifi-backend',
       });
     });
   });

@@ -70,7 +70,7 @@ export default (): AppConfig => ({
   database: {
     url:
       process.env.DATABASE_URL ??
-      'postgresql://postgres:postgres@localhost:5432/mergefi',
+      'postgresql://postgres:postgres@localhost:5432/bountifi',
     synchronize: process.env.DATABASE_SYNCHRONIZE === 'true',
     logging: process.env.DATABASE_LOGGING === 'true',
   },
